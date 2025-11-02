@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Buy — KarachiZameenProperty.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body id="siteBody" class="bg-gray-50">
+  <header class="gradient-bg text-white">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-home text-3xl"></i>
+        <h1 class="text-2xl font-bold">KarachiZameenProperty.com</h1>
+      </div>
+      <nav class="hidden md:flex gap-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="buy.html" class="nav-link active">Buy</a>
+        <a href="rent.html" class="nav-link">Rent</a>
+        <a href="sell.html" class="nav-link">Sell</a>
+        <a href="areas.html" class="nav-link">Areas</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div class="hidden md:block text-sm bg-white bg-opacity-20 px-3 py-2 rounded-full">
+          <i class="fas fa-phone mr-2"></i>0345-227260-7
+        </div>
+        <button id="themeToggle" class="btn" title="Toggle dark/light mode"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-10">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <h2 class="text-2xl font-semibold">Properties for Sale</h2>
+
+        <div class="flex gap-3 items-center">
+          <input id="buySearch" type="search" placeholder="Search by name, location or desc..." class="search-field">
+          <select id="buyAreaFilter" class="search-field"></select>
+          <select id="buyTypeFilter" class="search-field">
+            <option value="">All Types</option>
+            <option>House</option><option>Apartment</option><option>Plot</option><option>Commercial</option>
+          </select>
+          <select id="buySort" class="search-field">
+            <option value="">Sort</option>
+            <option value="price_asc">Price: Low → High</option>
+            <option value="price_desc">Price: High → Low</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="buyList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <div id="buyEmpty" class="empty hidden">No sale properties found.</div>
+
+      <!-- pagination -->
+      <div class="mt-6 flex justify-center">
+        <div id="buyPagination" class="flex gap-2"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      applySavedTheme();
+      populateAreaOptions('#buyAreaFilter');
+      renderListPaged('sale', '#buyList', '#buyEmpty', {
+        searchInput:'#buySearch',
+        areaFilter:'#buyAreaFilter',
+        typeFilter:'#buyTypeFilter',
+        sortSelect:'#buySort',
+        paginationContainer:'#buyPagination',
+        pageSize:6
+      });
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KarachiZameenProperty.com — Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-gray-50" id="siteBody">
+  <!-- Header -->
+  <header class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-home text-3xl"></i>
+        <h1 class="text-2xl font-bold">KarachiZameenProperty.com</h1>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="buy.html" class="nav-link"><i class="fas fa-shopping-cart mr-2"></i>Buy</a>
+        <a href="rent.html" class="nav-link"><i class="fas fa-key mr-2"></i>Rent</a>
+        <a href="sell.html" class="nav-link"><i class="fas fa-upload mr-2"></i>Sell</a>
+        <a href="areas.html" class="nav-link"><i class="fas fa-map-marker-alt mr-2"></i>Areas</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden md:block text-sm bg-white bg-opacity-20 px-3 py-2 rounded-full">
+          <i class="fas fa-phone mr-2"></i>0345-227260-7
+        </div>
+        <button id="themeToggle" class="btn" title="Toggle dark/light mode"><i class="fas fa-moon"></i></button>
+        <div class="md:hidden">
+          <button id="mobileMenuBtn" class="text-white text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden bg-white text-gray-800">
+      <div class="container mx-auto px-4 py-3 flex flex-col gap-2">
+        <a href="buy.html" class="py-2">Buy</a>
+        <a href="rent.html" class="py-2">Rent</a>
+        <a href="sell.html" class="py-2">Sell</a>
+        <a href="areas.html" class="py-2">Areas</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-4">Find Your Dream Property in Karachi</h2>
+      <p class="text-lg text-gray-600 mb-8">Buy, Rent or Sell — fast, simple and local.</p>
+
+      <div class="flex justify-center gap-3 flex-wrap">
+        <a href="buy.html" class="btn-primary px-6 py-3"><i class="fas fa-shopping-cart mr-2"></i> Browse for Sale</a>
+        <a href="rent.html" class="btn-primary px-6 py-3"><i class="fas fa-key mr-2"></i> Browse for Rent</a>
+        <a href="sell.html" class="btn-outline px-6 py-3"><i class="fas fa-upload mr-2"></i> Sell Your Property</a>
+        <a href="areas.html" class="btn-outline px-6 py-3"><i class="fas fa-map-marked-alt mr-2"></i> Explore Areas</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="py-8">
+    <div class="container mx-auto px-4">
+      <h3 class="text-2xl font-semibold mb-4">Featured Listings</h3>
+      <div id="featuredGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="gradient-bg text-white py-8 mt-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>© <span id="yr"></span> KarachiZameenProperty.com — Built with ❤️</p>
+    </div>
+  </footer>
+
+  <!-- Detail Modal (shared) -->
+  <div id="detailModal" class="modal hidden">
+    <div class="modal-card max-w-2xl">
+      <div class="modal-header">
+        <h3 id="detailTitle" class="text-lg font-bold"></h3>
+        <button id="detailClose" class="icon-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="detailBody"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('yr').innerText = new Date().getFullYear();
+    // mobile menu behavior
+    document.getElementById('mobileMenuBtn').addEventListener('click', function(){ document.getElementById('mobileMenu').classList.toggle('hidden'); });
+    // theme toggle
+    document.getElementById('themeToggle').addEventListener('click', function(){ toggleTheme(); });
+    document.addEventListener('DOMContentLoaded', function(){ 
+      // apply saved theme
+      applySavedTheme();
+      // render featured 6 items
+      renderFeatured('#featuredGrid', 6);
+    });
+  </script>
+</body>
+</html>

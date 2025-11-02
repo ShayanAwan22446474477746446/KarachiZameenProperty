@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sell — KarachiZameenProperty.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body id="siteBody" class="bg-gray-50">
+  <header class="gradient-bg text-white">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-home text-3xl"></i>
+        <h1 class="text-2xl font-bold">KarachiZameenProperty.com</h1>
+      </div>
+      <nav class="hidden md:flex gap-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="buy.html" class="nav-link">Buy</a>
+        <a href="rent.html" class="nav-link">Rent</a>
+        <a href="sell.html" class="nav-link active">Sell</a>
+        <a href="areas.html" class="nav-link">Areas</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div class="hidden md:block text-sm bg-white bg-opacity-20 px-3 py-2 rounded-full">
+          <i class="fas fa-phone mr-2"></i>0345-227260-7
+        </div>
+        <button id="themeToggle" class="btn" title="Toggle dark/light mode"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-10">
+    <div class="container mx-auto px-4 max-w-3xl">
+      <h2 class="text-2xl font-semibold mb-4">Add Your Property</h2>
+
+      <form id="sellForm" class="space-y-4 bg-white p-6 rounded-lg shadow-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <label class="block">
+            Property Name
+            <input id="s_name" required type="text" class="input-field" placeholder="e.g. 3BHK Clifton"/>
+          </label>
+
+          <label class="block">
+            Area / Location
+            <input id="s_location" required type="text" class="input-field" placeholder="e.g. DHA"/>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <label>
+            Price (PKR)
+            <input id="s_price" required type="number" class="input-field" min="1" />
+          </label>
+
+          <label>
+            Type
+            <select id="s_type" required class="input-field">
+              <option value="">Choose type</option>
+              <option>House</option><option>Apartment</option><option>Plot</option><option>Commercial</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <label>
+            Bedrooms
+            <input id="s_bedrooms" type="number" class="input-field" min="0" />
+          </label>
+          <label>
+            Bathrooms
+            <input id="s_bathrooms" type="number" class="input-field" min="0" />
+          </label>
+          <label>
+            Size (sq ft)
+            <input id="s_size" type="number" class="input-field" min="0" />
+          </label>
+        </div>
+
+        <label>
+          Category
+          <select id="s_category" class="input-field" required>
+            <option value="sale">Sale</option>
+            <option value="rent">Rent</option>
+          </select>
+        </label>
+
+        <label>
+          Contact (phone with country code, e.g., +923001234567)
+          <input id="s_contact" type="text" class="input-field" placeholder="+92-" value="0345-227260-7"/>
+        </label>
+
+        <label>
+          Description
+          <textarea id="s_description" rows="3" class="input-field"></textarea>
+        </label>
+
+        <label>
+          Upload Image (single)
+          <input id="s_image" type="file" accept="image/*" class="input-field" />
+        </label>
+
+        <div class="flex gap-3">
+          <button id="s_save" class="btn-primary">Save Property</button>
+          <button id="s_preview" type="button" class="btn">Preview</button>
+          <button id="s_clear" type="button" class="btn danger">Clear Form</button>
+        </div>
+      </form>
+
+      <div id="previewCard" class="mt-6 hidden"></div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      applySavedTheme();
+      // Preview image read and show preview card
+      const fileInput = document.getElementById('s_image');
+      let imageBase64 = '';
+
+      fileInput.addEventListener('change', function(e){
+        const f = e.target.files[0];
+        if(!f) { imageBase64 = ''; return; }
+        const reader = new FileReader();
+        reader.onload = function(evt){
+          imageBase64 = evt.target.result;
+        };
+        reader.readAsDataURL(f);
+      });
+
+      // Save
+      document.getElementById('sellForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        const prop = {
+          id: generateId(),
+          name: document.getElementById('s_name').value.trim(),
+          location: document.getElementById('s_location').value.trim(),
+          price: Number(document.getElementById('s_price').value || 0),
+          type: document.getElementById('s_type').value,
+          bedrooms: Number(document.getElementById('s_bedrooms').value || 0),
+          bathrooms: Number(document.getElementById('s_bathrooms').value || 0),
+          size: Number(document.getElementById('s_size').value || 0),
+          category: document.getElementById('s_category').value,
+          contact: document.getElementById('s_contact').value.trim(),
+          description: document.getElementById('s_description').value.trim(),
+          image: imageBase64 || '',
+          createdAt: Date.now()
+        };
+        addProperty(prop);
+        alert('Property saved! It will appear in Buy or Rent pages depending on category.');
+        document.getElementById('sellForm').reset();
+        document.getElementById('previewCard').classList.add('hidden');
+        imageBase64 = '';
+      });
+
+      // Preview
+      document.getElementById('s_preview').addEventListener('click', function(){
+        const data = {
+          name: document.getElementById('s_name').value.trim(),
+          location: document.getElementById('s_location').value.trim(),
+          price: document.getElementById('s_price').value,
+          type: document.getElementById('s_type').value,
+          category: document.getElementById('s_category').value,
+          bedrooms: document.getElementById('s_bedrooms').value,
+          bathrooms: document.getElementById('s_bathrooms').value,
+          size: document.getElementById('s_size').value,
+          contact: document.getElementById('s_contact').value,
+          description: document.getElementById('s_description').value,
+          image: imageBase64 || ''
+        };
+        const preview = document.getElementById('previewCard');
+        preview.innerHTML = createPropertyPreviewHTML(data);
+        preview.classList.remove('hidden');
+      });
+
+      // Clear
+      document.getElementById('s_clear').addEventListener('click', function(){
+        if(confirm('Clear the form?')) {
+          document.getElementById('sellForm').reset();
+          document.getElementById('previewCard').classList.add('hidden');
+          imageBase64 = '';
+        }
+      });
+
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    });
+  </script>
+</body>
+</html>
